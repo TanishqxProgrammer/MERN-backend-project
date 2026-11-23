@@ -1,4 +1,4 @@
-const userModel = require("../models/user.model");
+const userModel = require("../model/user.model");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
@@ -16,12 +16,12 @@ async function authMiddleware(req, res, next){
     try{
         const decoded = jwt.verify(token, config.JWT_KEY);
         
-        const user = await userModel.findById(decoded.userId);
+        const user = await userModel.findById(decoded.id);
 
         req.user = user;
 
         return next();
-        
+
     }catch(err){
         return res.status(401).json({
             message: "Unauthorized access. Invalid token."
@@ -29,4 +29,4 @@ async function authMiddleware(req, res, next){
     }
 }
 
-module.exports = authMiddleware;
+module.exports = { authMiddleware };
